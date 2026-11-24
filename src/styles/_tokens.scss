@@ -1,0 +1,78 @@
+// HUD design tokens, taken from the "Ai Intelligence - Layout" design. Every colour, font,
+// radius and glow the components use lives here; components never hard-code them.
+
+@mixin root {
+  // Page
+  --hud-page: #040b17;
+  --hud-page-glow: radial-gradient(1200px 600px at 55% 18%, #0b2748 0%, #050e1d 60%, #030914 100%);
+
+  // Text
+  --hud-text: #d8ecff;
+  --hud-text-bright: #e9f7ff;
+  --hud-text-soft: #c4dcf2;
+  --hud-text-muted: #8fb3d1;
+  --hud-text-dim: #6f93b3;
+  --hud-heading: #bfe9ff;
+  --hud-link: #5fe0ff;
+  --hud-link-hover: #b8f1ff;
+
+  // Accent (cyan)
+  --hud-accent: #3ad8ff;
+  --hud-accent-strong: #5fe0ff;
+  --hud-accent-soft: #8fe6ff;
+  --hud-accent-glow: rgb(58 216 255 / 55%);
+  --hud-accent-wash: rgb(58 216 255 / 8%);
+  --hud-accent-wash-strong: rgb(58 216 255 / 16%);
+
+  // Surfaces and lines
+  --hud-panel: linear-gradient(180deg, rgb(12 36 64 / 72%), rgb(6 20 38 / 72%));
+  --hud-panel-border: #143a60;
+  --hud-item: rgb(6 22 42 / 75%);
+  --hud-item-border: #163d63;
+  --hud-control-border: #1d5584;
+  --hud-control-bg: #0b2440;
+  --hud-icon-border: #1c4c78;
+  --hud-pill-border: #1a4a74;
+  --hud-pill-bg: rgb(8 28 52 / 80%);
+  --hud-track: #12304f;
+  --hud-fill: linear-gradient(90deg, #1a8fc4, #3ad8ff);
+  --hud-fill-glow: 0 0 8px rgb(58 216 255 / 60%);
+
+  // Status (dot / text / tag background)
+  --hud-ok: #3ee6a0;
+  --hud-ok-text: #6ff0bb;
+  --hud-ok-bg: rgb(62 230 160 / 14%);
+  --hud-warn: #ffc164;
+  --hud-warn-text: #ffc98a;
+  --hud-warn-bg: rgb(255 193 100 / 16%);
+  --hud-error: #ff6b6b;
+  --hud-error-text: #ff9a9a;
+  --hud-error-bg: rgb(255 107 107 / 16%);
+  --hud-off: #6f93b3;
+  --hud-off-text: #a9c3da;
+  --hud-off-bg: rgb(143 179 209 / 12%);
+  --hud-info-text: #8fe6ff;
+  --hud-info-bg: rgb(58 216 255 / 12%);
+  --hud-purple: #a98bff;
+  --hud-purple-text: #c7b6ff;
+  --hud-purple-bg: rgb(169 139 255 / 14%);
+
+  // Type
+  --hud-font-display: 'Rajdhani', sans-serif;
+  --hud-font-text: 'Inter', system-ui, sans-serif;
+  --hud-size-xs: 11px;
+  --hud-size-sm: 12px;
+  --hud-size-md: 14px;
+  --hud-size-lg: 15px;
+  --hud-size-xl: 24px;
+  --hud-size-title: 30px;
+
+  // Shape and spacing
+  --hud-radius-sm: 5px;
+  --hud-radius-md: 8px;
+  --hud-radius-lg: 10px;
+  --hud-radius-pill: 22px;
+  --hud-gap: 16px;
+  --hud-pad: 18px;
+  --hud-control: 44px;
+}

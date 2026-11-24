@@ -1,0 +1,92 @@
+<app-hud-shell
+  title="Example"
+  subtitle="Every kit component on one page"
+  active="Dashboard"
+  [prompts]="prompts"
+>
+  <span shell-status class="hud-sm">Sample data, not live.</span>
+
+  @if (data(); as d) {
+    <div class="hud-grid">
+      @for (s of d.stats; track s.label) {
+        <app-hud-stat
+          class="hud-span-3"
+          [label]="s.label"
+          [value]="s.value"
+          [hint]="s.hint"
+          [tone]="s.tone"
+        />
+      }
+
+      <app-hud-panel class="hud-span-6" title="Sources" hint="Connections and their state">
+        <app-hud-tag panel-action tone="info">Live</app-hud-tag>
+        @for (src of d.sources; track src.name) {
+          <app-hud-item>
+            <app-hud-icon item-icon>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /></svg>
+            </app-hud-icon>
+            <strong>{{ src.name }}</strong>
+            <span class="hud-sm">{{ src.detail }}</span>
+            <app-hud-dot item-end [tone]="src.status">{{ statusText(src.status) }}</app-hud-dot>
+          </app-hud-item>
+        }
+      </app-hud-panel>
+
+      <app-hud-panel class="hud-span-6" title="Usage today">
+        @for (u of d.usage; track u.name) {
+          <app-hud-progress
+            [label]="u.name"
+            [value]="percent(u.used, u.limit)"
+            [valueText]="u.used + ' / ' + u.limit"
+          />
+        }
+        <div class="hud-sm">Alerts <app-hud-switch label="Alerts" [(checked)]="alerts" /></div>
+      </app-hud-panel>
+
+      <app-hud-panel class="hud-span-8" title="Tasks" hint="Scheduled tasks and their last run">
+        <table class="hud-table">
+          <caption class="visually-hidden">
+            Scheduled tasks
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Task</th>
+              <th scope="col">Mode</th>
+              <th scope="col">Last run</th>
+              <th scope="col">State</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (t of d.tasks; track t.name) {
+              <tr>
+                <td>{{ t.name }}</td>
+                <td>
+                  <app-hud-tag [tone]="modeTone(t.mode)">{{ t.mode }}</app-hud-tag>
+                </td>
+                <td>{{ t.lastRun }}</td>
+                <td>
+                  <app-hud-dot [tone]="resultTone(t.result)">{{ t.result }}</app-hud-dot>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </app-hud-panel>
+
+      <app-hud-panel class="hud-span-4" title="Empty list">
+        <app-hud-empty title="Nothing yet" text="Items show here once they arrive." />
+      </app-hud-panel>
+    </div>
+  } @else {
+    <div class="hud-grid" role="status">
+      <span class="visually-hidden">Loading…</span>
+      @for (i of [1, 2, 3, 4]; track i) {
+        <app-hud-skeleton class="hud-span-3" height="84px" />
+      }
+      <app-hud-skeleton class="hud-span-6" height="220px" />
+      <app-hud-skeleton class="hud-span-6" height="220px" />
+    </div>
+  }
+
+  <button shell-action type="button" class="hud-btn hud-btn--primary">Check again</button>
+</app-hud-shell>

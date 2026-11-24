@@ -1,0 +1,98 @@
+<div class="frame">
+  <header class="top">
+    <button
+      type="button"
+      class="square"
+      [attr.aria-label]="collapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+      [attr.aria-expanded]="!collapsed()"
+      (click)="collapsed.set(!collapsed())"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="16" rx="2" />
+        <path d="M9 4v16" />
+      </svg>
+    </button>
+
+    <div class="logo">
+      <span class="logo-ring" aria-hidden="true"><span></span></span>
+      <span>
+        <span class="logo-name">Buzzer</span>
+        <span class="logo-sub">Intelligence</span>
+      </span>
+    </div>
+
+    <ng-content select="[shell-status]" />
+
+    <div class="heading">
+      <h1 class="title">{{ title() }}</h1>
+      @if (subtitle()) {
+        <p class="hud-sm subtitle">{{ subtitle() }}</p>
+      }
+    </div>
+
+    <span class="hud-num clock">{{ time() }}</span>
+    <button type="button" class="square square--lit" aria-label="Settings">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="3" />
+        <path
+          d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"
+        />
+      </svg>
+    </button>
+    <span class="avatar" aria-hidden="true">{{ initials() }}</span>
+  </header>
+
+  <div class="middle">
+    <aside class="side" [class.side--hidden]="collapsed()" aria-label="Sidebar">
+      <nav class="nav" aria-label="Pages">
+        <p class="hud-sm nav-note">Admin only</p>
+        @for (group of nav; track group.title) {
+          <p class="nav-group">{{ group.title }}</p>
+          @for (item of group.items; track item.label) {
+            <span class="nav-item" [class.nav-item--active]="item.label === active()">
+              <svg viewBox="0 0 24 24" aria-hidden="true" [innerHTML]="item.icon"></svg>
+              {{ item.label }}
+            </span>
+          }
+        }
+      </nav>
+
+      <section class="voice" aria-label="Voice assistant">
+        <h2 class="voice-title">Siri · primary</h2>
+        <div class="voice-row">
+          <span class="mic" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <rect x="9" y="3" width="6" height="11" rx="3" />
+              <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
+            </svg>
+          </span>
+          <span class="say">"Hey Siri, Buzzer Intelligence"</span>
+        </div>
+        @if (prompts().length) {
+          <p class="hud-sm">Then say:</p>
+          @for (prompt of prompts(); track prompt) {
+            <p class="prompt">"{{ prompt }}"</p>
+          }
+        }
+      </section>
+    </aside>
+
+    <main class="content">
+      <ng-content />
+    </main>
+  </div>
+
+  <footer class="bottom">
+    <div class="cities">
+      <span class="hud-sm">Sarajevo · Dubai</span>
+      <span>{{ cities() }}</span>
+    </div>
+    <div class="ask-wrap">
+      <button type="button" class="ask">
+        <span class="ask-title">Ask Buzzer Intelligence</span>
+        <span class="ask-sub">or say "Hey Siri, Buzzer Intelligence"</span>
+      </button>
+    </div>
+    <ng-content select="[shell-action]" />
+  </footer>
+</div>

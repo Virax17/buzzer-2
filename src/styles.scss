@@ -1,0 +1,169 @@
+// Global styles only: tokens, reset, element defaults and the few HUD classes shared by every
+// page (grid, table, buttons, small text). Component styles live in the component.
+@use 'tokens';
+
+:root {
+  @include tokens.root;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--hud-font-text);
+  font-size: var(--hud-size-md);
+  line-height: 1.4;
+  color: var(--hud-text);
+  background: var(--hud-page);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--hud-link);
+
+  &:hover {
+    color: var(--hud-link-hover);
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--hud-link);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// Small and dim text, numbers in the display font.
+.hud-sm {
+  font-size: var(--hud-size-sm);
+  color: var(--hud-text-muted);
+}
+
+.hud-dim {
+  color: var(--hud-text-dim);
+}
+
+.hud-num {
+  font-family: var(--hud-font-display);
+  font-weight: 700;
+}
+
+// 12-column page grid: put `hud-span-3` ... `hud-span-12` on each panel.
+.hud-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--hud-gap);
+}
+
+@each $n in 3, 4, 5, 6, 7, 8, 12 {
+  .hud-span-#{$n} {
+    grid-column: span $n;
+  }
+}
+
+@media (width <= 1100px) {
+  .hud-span-3,
+  .hud-span-4,
+  .hud-span-5,
+  .hud-span-7,
+  .hud-span-8 {
+    grid-column: span 6;
+  }
+}
+
+@media (width <= 700px) {
+  .hud-grid > * {
+    grid-column: 1 / -1;
+  }
+}
+
+// Buttons: `hud-btn`, plus `hud-btn--primary` for the glowing one.
+.hud-btn {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: var(--hud-control);
+  padding: 0 14px;
+  border: 1px solid var(--hud-control-border);
+  border-radius: 9px;
+  background: var(--hud-accent-wash);
+  color: var(--hud-text-bright);
+  font: 600 var(--hud-size-md) var(--hud-font-text);
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--hud-accent-wash-strong);
+  }
+
+  &--primary {
+    border-color: var(--hud-accent);
+    background: var(--hud-accent-wash-strong);
+    box-shadow: 0 0 14px var(--hud-accent-glow);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentcolor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+// Tables: `<table class="hud-table">` with a <caption>.
+.hud-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  caption {
+    padding-bottom: 6px;
+    font-size: var(--hud-size-sm);
+    color: var(--hud-text-muted);
+    text-align: left;
+  }
+
+  th {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--hud-item-border);
+    font-family: var(--hud-font-display);
+    font-size: var(--hud-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--hud-text-dim);
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 9px 8px;
+    border-bottom: 1px solid rgb(22 61 99 / 60%);
+    vertical-align: middle;
+  }
+}
