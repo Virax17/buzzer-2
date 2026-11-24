@@ -1,0 +1,318 @@
+<ng-template #icon let-kind>
+  <svg viewBox="0 0 24 24">
+    @switch (kind) {
+      @case ('whatsapp') {
+        <path d="M4 20l1.5-4A8 8 0 1 1 9 19z" />
+        <path d="M9 9c0 3 3 6 6 6" />
+      }
+      @case ('gmail') {
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m3 7 9 6 9-6" />
+      }
+      @case ('calendar') {
+        <rect x="3" y="5" width="18" height="16" rx="2" />
+        <path d="M3 10h18M8 3v4M16 3v4" />
+      }
+      @case ('meeting') {
+        <path d="M6 3h9l4 4v14H6z" />
+        <path d="M14 3v5h5M9 13h7M9 17h5" />
+      }
+      @default {
+        <rect x="4" y="4" width="16" height="16" rx="3" />
+        <path d="m8 12 3 3 5-6" />
+      }
+    }
+  </svg>
+</ng-template>
+
+<app-hud-shell
+  title="Knowledge base"
+  subtitle="WhatsApp groups, email, calendar, meetings and Basecamp in one place"
+  active="Knowledge base"
+  [prompts]="prompts"
+>
+  <div shell-status class="status">
+    <span class="status-label">Index</span>
+    @if (data(); as d) {
+      <app-hud-dot class="status-dot" tone="ok">{{ d.indexOn ? 'ON' : 'OFF' }}</app-hud-dot>
+      <app-hud-dot class="status-dot" tone="info">{{ total() | number }} ITEMS</app-hud-dot>
+      <app-hud-dot class="status-dot" tone="purple">
+        {{ asked() }} / {{ d.askLimit }} ASKED
+      </app-hud-dot>
+    } @else {
+      <app-hud-skeleton width="180px" height="16px" />
+    }
+  </div>
+
+  <p class="hud-sm proposal">Design proposal: sample data, not live.</p>
+
+  @if (data(); as d) {
+    <div class="hud-grid">
+      <!-- Ask -->
+      <app-hud-panel class="hud-span-7" title="Ask anything that happened">
+        <app-hud-tag panel-action>{{ asked() }} / {{ d.askLimit }} today</app-hud-tag>
+
+        <form class="ask" (submit)="ask($event)">
+          <svg class="ask-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-4-4" />
+          </svg>
+          <input
+            class="ask-input"
+            aria-label="Question"
+            [value]="question()"
+            (input)="typedValue($event)"
+          />
+          <button
+            type="button"
+            class="hud-btn ask-btn"
+            aria-label="Ask by voice"
+            (click)="voiceNote.set('Voice input is not connected in this sample.')"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="9" y="3" width="6" height="11" rx="3" />
+              <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
+            </svg>
+          </button>
+          <button
+            type="submit"
+            class="hud-btn ask-btn ask-btn--go"
+            [disabled]="asking() || limitReached()"
+          >
+            Ask
+          </button>
+        </form>
+        <p class="visually-hidden" role="status">{{ voiceNote() }}</p>
+
+        <div class="chips">
+          @for (h of d.questionHints; track h) {
+            <button type="button" class="chip" (click)="setQuestion(h)">{{ h }}</button>
+          }
+        </div>
+
+        @if (asking()) {
+          <app-hud-skeleton height="150px" />
+        } @else if (answer(); as a) {
+          <section class="answer" [attr.aria-label]="a.found ? 'Answer' : 'No answer'">
+            <div class="answer-head">
+              <app-hud-tag [tone]="a.found ? 'ok' : 'warn'">
+                {{ a.found ? 'Found' : 'Not found' }}
+              </app-hud-tag>
+              <span class="hud-sm">
+                {{ a.citations.length }} {{ a.citations.length === 1 ? 'source' : 'sources' }} ·
+                {{ a.window }}
+              </span>
+            </div>
+            @if (a.found) {
+              <p class="answer-text">{{ a.text }}</p>
+              @for (c of a.citations; track c.title) {
+                <app-hud-item>
+                  <app-hud-icon item-icon [class]="'k-' + c.kind">
+                    <ng-container *ngTemplateOutlet="icon; context: { $implicit: c.kind }" />
+                  </app-hud-icon>
+                  <strong>{{ c.title }}</strong>
+                  <span class="hud-sm">{{ c.detail }}</span>
+                  <app-hud-tag item-end [tone]="scopeTone(c.scope)">
+                    {{ scopeLabel(c.scope) }}
+                  </app-hud-tag>
+                </app-hud-item>
+              }
+            } @else {
+              <app-hud-empty
+                title="Nothing found"
+                text="No item in the index answers this. Try a name, a group or a date."
+              />
+            }
+          </section>
+        } @else {
+          <app-hud-empty
+            title="No question yet"
+            text="Ask something, or pick one of the examples."
+          />
+        }
+      </app-hud-panel>
+
+      <!-- Everything I know: the orb -->
+      <app-hud-panel class="hud-span-5 orb-panel">
+        <div class="orb-dots" aria-hidden="true"></div>
+        <div class="orb-floor" aria-hidden="true"></div>
+        <div class="orb-ring orb-ring--a" aria-hidden="true"><span></span></div>
+        <div class="orb-ring orb-ring--b" aria-hidden="true"><span></span></div>
+        <div class="orb" role="img" [attr.aria-label]="(total() | number) + ' items in the index'">
+          <span class="orb-lines" aria-hidden="true"></span>
+          <span class="orb-name">Buzzer</span>
+          <span class="orb-sub">Intelligence</span>
+          <span class="orb-count">{{ total() | number }} items</span>
+        </div>
+        @for (s of d.sources; track s.id) {
+          <app-hud-tag [class]="'orb-tag orb-tag--' + s.place" [tone]="s.tone">
+            {{ s.label }} {{ s.count | number }}
+          </app-hud-tag>
+        }
+      </app-hud-panel>
+
+      <!-- Everything I know: the feed -->
+      <app-hud-panel class="hud-span-8" title="Everything I know">
+        <div panel-action class="chips" role="group" aria-label="Scope and time">
+          <button
+            type="button"
+            class="chip"
+            [attr.aria-pressed]="scopes().has('business')"
+            (click)="toggleScope('business')"
+          >
+            Business
+          </button>
+          <button
+            type="button"
+            class="chip"
+            [attr.aria-pressed]="scopes().has('private')"
+            (click)="toggleScope('private')"
+          >
+            Private
+          </button>
+          <button
+            type="button"
+            class="chip"
+            [attr.aria-pressed]="week()"
+            (click)="week.set(!week())"
+          >
+            7 days
+          </button>
+        </div>
+
+        <div class="chips" role="group" aria-label="Source">
+          @for (c of sourceChips; track c.id) {
+            <button
+              type="button"
+              class="chip"
+              [attr.aria-pressed]="source() === c.id"
+              (click)="source.set(c.id)"
+            >
+              {{ c.label }}
+            </button>
+          }
+        </div>
+
+        @for (e of entries(); track e.id) {
+          <app-hud-item>
+            <app-hud-icon item-icon [class]="'k-' + e.kind">
+              <ng-container *ngTemplateOutlet="icon; context: { $implicit: e.kind }" />
+            </app-hud-icon>
+            <strong>{{ e.title }}</strong>
+            <span class="hud-sm">{{ e.detail }}</span>
+            <app-hud-tag item-end [tone]="scopeTone(e.scope)">{{
+              scopeLabel(e.scope)
+            }}</app-hud-tag>
+          </app-hud-item>
+        } @empty {
+          <app-hud-empty
+            title="Nothing matches"
+            text="Change the scope, the source or the time filter."
+          />
+        }
+      </app-hud-panel>
+
+      <!-- WhatsApp groups -->
+      <app-hud-panel class="hud-span-4" title="WhatsApp groups">
+        <app-hud-tag panel-action tone="ok">● Live</app-hud-tag>
+        @for (g of d.groups; track g.name) {
+          <app-hud-item>
+            <app-hud-icon item-icon class="k-whatsapp">
+              <ng-container *ngTemplateOutlet="icon; context: { $implicit: 'whatsapp' }" />
+            </app-hud-icon>
+            <strong>{{ g.name }}</strong>
+            <span class="hud-sm">messages today</span>
+            <span item-end class="hud-num count">{{ g.messagesToday }}</span>
+          </app-hud-item>
+        } @empty {
+          <app-hud-empty
+            title="No groups"
+            text="Groups show here once the listener watches them."
+          />
+        }
+        <p class="hud-sm">{{ d.watchedGroups }} groups watched by the listener</p>
+      </app-hud-panel>
+
+      <!-- AI suggestions -->
+      <app-hud-panel class="hud-span-6" title="AI suggestions">
+        @for (s of suggestions(); track s.id) {
+          <div class="suggestion">
+            <span class="suggestion-title">{{ s.title }}</span>
+            <span class="hud-sm">{{ s.detail }}</span>
+            <div class="suggestion-actions">
+              @if (created().includes(s.id)) {
+                <app-hud-tag tone="ok">To-do created</app-hud-tag>
+              } @else {
+                <button type="button" class="hud-btn" (click)="createTodo(s.id)">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="4" y="4" width="16" height="16" rx="3" />
+                    <path d="m8 12 3 3 5-6" />
+                  </svg>
+                  Create to-do
+                </button>
+              }
+              <button type="button" class="chip" (click)="dismiss(s.id)">Dismiss</button>
+            </div>
+          </div>
+        } @empty {
+          <app-hud-empty
+            title="All caught up"
+            text="New suggestions show here when the AI finds open promises."
+          />
+        }
+      </app-hud-panel>
+
+      <!-- Business and private -->
+      <app-hud-panel class="hud-span-6" title="Business and private">
+        <app-hud-progress
+          class="bar bar-business"
+          label="Business"
+          [value]="businessPercent()"
+          [valueText]="(d.businessItems | number) ?? ''"
+        />
+        <app-hud-progress
+          class="bar bar-private"
+          label="Private"
+          [value]="privatePercent()"
+          [valueText]="(d.privateItems | number) ?? ''"
+        />
+        <app-hud-item>
+          <app-hud-icon item-icon class="k-gmail">
+            <svg viewBox="0 0 24 24">
+              <circle cx="8" cy="15" r="4" />
+              <path d="m11 12 9-9M16 7l3 3" />
+            </svg>
+          </app-hud-icon>
+          <strong>Private items and AI</strong>
+          <span class="hud-sm">{{ d.privateKeyNote }}</span>
+          <app-hud-tag item-end tone="ok">Own key</app-hud-tag>
+        </app-hud-item>
+        <app-hud-item>
+          <strong>{{ d.settings.scopeNote }}</strong>
+          <span class="hud-sm"
+            >{{ d.settings.schedule }} · kept {{ d.settings.keepDays }} days</span
+          >
+          <app-hud-switch item-end label="Knowledge index" [(checked)]="indexOn" />
+        </app-hud-item>
+      </app-hud-panel>
+    </div>
+  } @else {
+    <div class="hud-grid" role="status">
+      <span class="visually-hidden">Loading…</span>
+      <app-hud-skeleton class="hud-span-7" height="470px" />
+      <app-hud-skeleton class="hud-span-5" height="470px" />
+      <app-hud-skeleton class="hud-span-8" height="360px" />
+      <app-hud-skeleton class="hud-span-4" height="360px" />
+      <app-hud-skeleton class="hud-span-6" height="220px" />
+      <app-hud-skeleton class="hud-span-6" height="220px" />
+    </div>
+  }
+
+  <button shell-action type="button" class="hud-btn footer-ask">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-4-4" />
+    </svg>
+    Ask a question
+  </button>
+</app-hud-shell>

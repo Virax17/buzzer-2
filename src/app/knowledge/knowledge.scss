@@ -1,0 +1,429 @@
+// Pieces of the Knowledge base design the kit does not have yet: the status pill in the header,
+// filter chips, the ask bar and the "everything I know" orb. All colours come from the kit tokens.
+
+:host {
+  display: contents;
+}
+
+// Header pill: INDEX · ON · 4,812 ITEMS · 4 / 30 ASKED
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  padding: 8px 16px;
+  border: 1px solid var(--hud-pill-border);
+  border-radius: var(--hud-radius-pill);
+  background: var(--hud-pill-bg);
+}
+
+.status-label,
+.status-dot {
+  font-family: var(--hud-font-display);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.status-label {
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.status-dot {
+  font-size: var(--hud-size-md);
+}
+
+// Note under the header, right-aligned
+.proposal {
+  align-self: flex-end;
+  width: fit-content;
+  margin: 0 0 16px auto;
+  padding: 4px 12px;
+  border: 1px solid var(--hud-pill-border);
+  border-radius: 14px;
+}
+
+// List row titles are 14px in the design
+app-hud-item strong {
+  font-size: var(--hud-size-md);
+  font-weight: 600;
+}
+
+// Chips
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--hud-control-border);
+  border-radius: 16px;
+  background: transparent;
+  color: var(--hud-text-soft);
+  font: 500 13px var(--hud-font-text);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--hud-accent-wash);
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--hud-accent);
+    background: var(--hud-accent-wash-strong);
+    color: #fff;
+  }
+}
+
+// Ask bar
+.ask {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 6px 6px 18px;
+  border: 1px solid var(--hud-accent);
+  border-radius: 28px;
+  background: rgb(6 22 42 / 90%);
+  box-shadow: 0 0 18px rgb(58 216 255 / 25%);
+}
+
+.ask-icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ask-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 40px;
+  border: 0;
+  background: transparent;
+  color: var(--hud-text-bright);
+  font: 15px var(--hud-font-text);
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.ask:focus-within {
+  outline: 2px solid var(--hud-link);
+  outline-offset: 2px;
+}
+
+.ask-btn {
+  border-radius: var(--hud-radius-pill);
+
+  &--go {
+    border-color: var(--hud-accent);
+    background: #0f3d6a;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Answer card
+.answer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #2a7ab4;
+  border-radius: var(--hud-radius-md);
+  background: var(--hud-item);
+}
+
+.answer-head {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.answer-text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+// Icon colour per source
+.k-whatsapp {
+  color: var(--hud-ok-text);
+}
+
+.k-gmail {
+  color: var(--hud-purple-text);
+}
+
+.k-calendar,
+.k-meeting {
+  color: var(--hud-accent-soft);
+}
+
+.k-basecamp {
+  color: var(--hud-warn-text);
+}
+
+.count {
+  font-size: 16px;
+}
+
+// Suggestions
+.suggestion {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--hud-item-border);
+  border-radius: var(--hud-radius-md);
+  background: var(--hud-item);
+}
+
+.suggestion-title {
+  font-size: var(--hud-size-md);
+  font-weight: 600;
+}
+
+.suggestion-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+// Business and private bars: kit progress, with the private one in purple
+.bar-business {
+  --hud-fill: var(--hud-accent);
+
+  ::ng-deep .value {
+    color: var(--hud-info-text);
+  }
+}
+
+.bar-private {
+  --hud-fill: var(--hud-purple);
+  --hud-fill-glow: 0 0 8px var(--hud-purple);
+
+  ::ng-deep .value {
+    color: var(--hud-purple-text);
+  }
+}
+
+.footer-ask {
+  border-color: #2a7ab4;
+  background: #0f3d6a;
+}
+
+// The orb panel
+.orb-panel {
+  align-items: center;
+  justify-content: center;
+  min-height: 470px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 46%, rgb(30 110 170 / 35%) 0%, rgb(6 20 38 / 70%) 55%);
+}
+
+.orb-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgb(95 224 255 / 16%) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.orb-floor {
+  position: absolute;
+  top: 86%;
+  left: 50%;
+  width: 70%;
+  height: 64px;
+  border: 1px solid rgb(58 216 255 / 35%);
+  border-radius: 50%;
+  box-shadow: inset 0 0 40px rgb(58 216 255 / 25%);
+  transform: translate(-50%, -50%);
+}
+
+.orb-ring {
+  position: absolute;
+  border: 1px solid rgb(58 216 255 / 28%);
+  border-radius: 50%;
+
+  span {
+    position: absolute;
+    border-radius: 50%;
+    background: #bff3ff;
+    box-shadow: 0 0 14px var(--hud-accent);
+  }
+
+  &--a {
+    width: 92%;
+    aspect-ratio: 2.4;
+    animation: spin 40s linear infinite;
+
+    span {
+      top: -5px;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+    }
+  }
+
+  &--b {
+    width: 72%;
+    aspect-ratio: 1.3;
+    border-color: rgb(58 216 255 / 20%);
+    transform: rotate(28deg);
+    animation: spin-back 60s linear infinite;
+
+    span {
+      right: 6%;
+      bottom: 10%;
+      width: 8px;
+      height: 8px;
+    }
+  }
+}
+
+.orb {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  width: 250px;
+  height: 250px;
+  border: 1px solid rgb(95 224 255 / 60%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 38% 32%,
+    #1f8bc8 0%,
+    #0c3b66 42%,
+    #061a33 72%,
+    #030c18 100%
+  );
+  box-shadow:
+    0 0 60px rgb(58 216 255 / 45%),
+    inset 0 0 50px rgb(58 216 255 / 25%);
+  animation: pulse 4s ease-in-out infinite;
+  font-family: var(--hud-font-display);
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  text-shadow: 0 0 16px rgb(58 216 255 / 60%);
+}
+
+.orb-lines {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-linear-gradient(0deg, transparent 0 26px, rgb(95 224 255 / 12%) 26px 27px);
+}
+
+.orb-name,
+.orb-sub,
+.orb-count {
+  position: relative;
+  text-transform: uppercase;
+}
+
+.orb-name {
+  padding-left: 0.2em;
+  font-size: 40px;
+  letter-spacing: 0.2em;
+  color: #8df0ff;
+}
+
+.orb-sub {
+  padding-left: 0.32em;
+  font-size: 15px;
+  letter-spacing: 0.32em;
+  color: var(--hud-heading);
+}
+
+.orb-count {
+  padding-left: 0.14em;
+  font-size: 18px;
+  letter-spacing: 0.14em;
+  color: var(--hud-ok-text);
+}
+
+.orb-tag {
+  position: absolute;
+  border: 1px solid var(--hud-control-border);
+  background: rgb(8 28 52 / 92%);
+
+  &--tl {
+    top: 8%;
+    left: 4%;
+  }
+
+  &--tr {
+    top: 8%;
+    right: 6%;
+  }
+
+  &--ml {
+    top: 44%;
+    left: 2%;
+  }
+
+  &--mr {
+    top: 44%;
+    right: 2%;
+  }
+
+  &--bl {
+    bottom: 18%;
+    left: 4%;
+  }
+
+  &--br {
+    right: 6%;
+    bottom: 18%;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-back {
+  to {
+    transform: rotate(-332deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.035);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb,
+  .orb-ring {
+    animation: none;
+  }
+}
