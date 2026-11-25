@@ -20,10 +20,10 @@ npm start        # http://localhost:4200 shows the example page
 | `app-hud-panel`    | Card with the corner brackets. `title`, `hint`, slot `panel-action`.                                                                    |
 | `app-hud-stat`     | KPI tile. `label`, `value`, `hint`, `tone`.                                                                                             |
 | `app-hud-item`     | List row. Slots `item-icon`, `item-end`.                                                                                                |
-| `app-hud-icon`     | Icon box for a 24×24 stroke SVG.                                                                                                        |
+| `app-hud-icon`     | Icon box for a 24×24 stroke SVG. `tone`.                                                                                                |
 | `app-hud-tag`      | Status tag. `tone`.                                                                                                                     |
 | `app-hud-dot`      | Status dot with its label. `tone`.                                                                                                      |
-| `app-hud-progress` | Progress bar. `value` (0-100), `label`, `valueText`.                                                                                    |
+| `app-hud-progress` | Progress bar. `value` (0-100), `label`, `valueText`, `tone`.                                                                            |
 | `app-hud-switch`   | On/off switch. `[(checked)]`, `label`.                                                                                                  |
 | `app-hud-skeleton` | Loading placeholder. `width`, `height`.                                                                                                 |
 | `app-hud-empty`    | Empty state. `title`, `text`.                                                                                                           |

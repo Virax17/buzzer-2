@@ -19,6 +19,7 @@ import { HudShell } from '../hud/shell/shell';
 import { HudSkeleton } from '../hud/skeleton/skeleton';
 import { HudSwitch } from '../hud/switch/switch';
 import { HudTag } from '../hud/tag/tag';
+import { type HudTone } from '../hud/tone';
 import { type Answer, type Scope, type SourceKind } from './knowledge.data';
 import { KnowledgeService } from './knowledge.service';
 
@@ -151,6 +152,19 @@ export class KnowledgeHud {
 
   protected createTodo(id: string): void {
     this.created.update((list) => [...list, id]);
+  }
+
+  protected kindTone(kind: SourceKind): HudTone {
+    switch (kind) {
+      case 'whatsapp':
+        return 'ok';
+      case 'gmail':
+        return 'purple';
+      case 'basecamp':
+        return 'warn';
+      default:
+        return 'info';
+    }
   }
 
   protected scopeTone(scope: Scope): 'info' | 'off' {

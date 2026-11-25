@@ -160,24 +160,6 @@ app-hud-item strong {
   line-height: 1.55;
 }
 
-// Icon colour per source
-.k-whatsapp {
-  color: var(--hud-ok-text);
-}
-
-.k-gmail {
-  color: var(--hud-purple-text);
-}
-
-.k-calendar,
-.k-meeting {
-  color: var(--hud-accent-soft);
-}
-
-.k-basecamp {
-  color: var(--hud-warn-text);
-}
-
 .count {
   font-size: 16px;
 }
@@ -204,22 +186,13 @@ app-hud-item strong {
   align-items: center;
 }
 
-// Business and private bars: kit progress, with the private one in purple
-.bar-business {
-  --hud-fill: var(--hud-accent);
-
-  ::ng-deep .value {
-    color: var(--hud-info-text);
-  }
+// Business and private values take the colour of their bar
+.bar-business ::ng-deep .value {
+  color: var(--hud-info-text);
 }
 
-.bar-private {
-  --hud-fill: var(--hud-purple);
-  --hud-fill-glow: 0 0 8px var(--hud-purple);
-
-  ::ng-deep .value {
-    color: var(--hud-purple-text);
-  }
+.bar-private ::ng-deep .value {
+  color: var(--hud-purple-text);
 }
 
 .footer-ask {

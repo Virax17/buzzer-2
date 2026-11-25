@@ -107,7 +107,7 @@
               <p class="answer-text">{{ a.text }}</p>
               @for (c of a.citations; track c.title) {
                 <app-hud-item>
-                  <app-hud-icon item-icon [class]="'k-' + c.kind">
+                  <app-hud-icon item-icon [tone]="kindTone(c.kind)">
                     <ng-container *ngTemplateOutlet="icon; context: { $implicit: c.kind }" />
                   </app-hud-icon>
                   <strong>{{ c.title }}</strong>
@@ -195,7 +195,7 @@
 
         @for (e of entries(); track e.id) {
           <app-hud-item>
-            <app-hud-icon item-icon [class]="'k-' + e.kind">
+            <app-hud-icon item-icon [tone]="kindTone(e.kind)">
               <ng-container *ngTemplateOutlet="icon; context: { $implicit: e.kind }" />
             </app-hud-icon>
             <strong>{{ e.title }}</strong>
@@ -217,7 +217,7 @@
         <app-hud-tag panel-action tone="ok">● Live</app-hud-tag>
         @for (g of d.groups; track g.name) {
           <app-hud-item>
-            <app-hud-icon item-icon class="k-whatsapp">
+            <app-hud-icon item-icon tone="ok">
               <ng-container *ngTemplateOutlet="icon; context: { $implicit: 'whatsapp' }" />
             </app-hud-icon>
             <strong>{{ g.name }}</strong>
@@ -265,19 +265,21 @@
       <!-- Business and private -->
       <app-hud-panel class="hud-span-6" title="Business and private">
         <app-hud-progress
-          class="bar bar-business"
+          class="bar-business"
+          tone="info"
           label="Business"
           [value]="businessPercent()"
           [valueText]="(d.businessItems | number) ?? ''"
         />
         <app-hud-progress
-          class="bar bar-private"
+          class="bar-private"
+          tone="purple"
           label="Private"
           [value]="privatePercent()"
           [valueText]="(d.privateItems | number) ?? ''"
         />
         <app-hud-item>
-          <app-hud-icon item-icon class="k-gmail">
+          <app-hud-icon item-icon tone="purple">
             <svg viewBox="0 0 24 24">
               <circle cx="8" cy="15" r="4" />
               <path d="m11 12 9-9M16 7l3 3" />
