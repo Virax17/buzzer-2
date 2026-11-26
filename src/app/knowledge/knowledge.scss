@@ -48,6 +48,12 @@
 app-hud-item strong {
   font-size: var(--hud-size-md);
   font-weight: 600;
+  color: var(--hud-text);
+}
+
+// Button text is a little softer than the kit's in the design
+.hud-btn {
+  color: #d8f3ff;
 }
 
 // Chips
@@ -187,6 +193,16 @@ app-hud-item strong {
 }
 
 // Business and private values take the colour of their bar
+.bar-business ::ng-deep .row,
+.bar-private ::ng-deep .row {
+  font-size: var(--hud-size-md);
+}
+
+.bar-business ::ng-deep .value,
+.bar-private ::ng-deep .value {
+  font-size: var(--hud-size-lg);
+}
+
 .bar-business ::ng-deep .value {
   color: var(--hud-info-text);
 }
